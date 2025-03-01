@@ -26,22 +26,35 @@ const userSaveToDatabase = async (userInfo: TUser) => {
   return { user, accessToken: token };
 };
 
-// User Save To Database
-// const usergetFromDatabase = async () => {
-//   const user = await User.find();
 
-//   return user;
-// };
-// User Update To Database
-// const userUpdateFromDatabase = async (data: { status: string; id: string }) => {
-//   const user = await User.findByIdAndUpdate(
-//     data?.id,
-//     { status: data?.status },
-//     { new: true },
-//   );
 
-//   return user;
-// };
+// Get All Users From DB
+const getAllUserFromDB = async () =>{
+  const users = await User.find()
+  return users
+}
+
+// Get Single User From DB
+const getSingleUserFromDB = async (id:string) =>{
+  const user = await User.findById(id)
+  return user
+}
+
+// Update User Personal Info From DB
+const updateUserPersonalInfoFromDB = async (email:string, payload:Partial<TUser>) =>{
+  const user = await User.findOneAndUpdate({email}, payload, {new:true})
+  return user
+}
+
+//  User Block By Admin 
+const userblockByAdmin = async (id: string, payload: { status:string }) => {
+  const user = await User.findByIdAndUpdate(id, payload, {new:true});
+  return user;
+};
 export const UserServices = {
   userSaveToDatabase,
+  getAllUserFromDB,
+  getSingleUserFromDB,
+  updateUserPersonalInfoFromDB,
+  userblockByAdmin,
 };
