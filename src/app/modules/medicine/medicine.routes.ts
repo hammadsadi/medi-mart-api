@@ -19,5 +19,19 @@ medicineRouter.post(
 // Get All Medicine
 medicineRouter.get('/',  MedicineControllers.getAllMedicines);
 
+// Get Single Medicine
+medicineRouter.get('/:medicineId', MedicineControllers.getSingleMedicine);
+
+// Update Single Medicine
+medicineRouter.patch('/:medicineId', auth(UserRole.Admin),  requestValidation(MedicineValidationSchemas.updateMedicineValidationSchema), MedicineControllers.updateSingleMedicine);
+
+
+// Delete Single Medicine
+medicineRouter.delete(
+  '/:medicineId',
+  auth(UserRole.Admin),
+  MedicineControllers.deleteSingleMedicine,
+);
+
 // Export User Router
 export const MedicineRoutes = medicineRouter;

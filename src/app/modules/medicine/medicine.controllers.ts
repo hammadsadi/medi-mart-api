@@ -32,7 +32,63 @@ const getAllMedicines = catchAsync(async (req, res) => {
   });
 });
 
+
+/**
+ * @description Get Single Medicine
+ * @param 'medicineId'
+ * @Response  Single Data
+ */
+const getSingleMedicine = catchAsync(async (req, res) => {
+  const result = await MedicineServices.getSingleMedicineFromDB(
+    req.params.medicineId,
+  );
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Single Medicine Retrieved Successful',
+    data: result,
+  });
+});
+
+
+/**
+ * @description Update Single Medicine
+ * @param 'medicineId'
+ * @Response  Single Data
+ */
+const updateSingleMedicine = catchAsync(async (req, res) => {
+  const result = await MedicineServices.updateSingleMedicineFromDB(
+    req.body,
+    req.params.medicineId,
+  );
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Single Medicine Updated Successful',
+    data: result,
+  });
+});
+
+/**
+ * @description Delete Single Medicine
+ * @param 'medicineId'
+ * @Response  Single Data
+ */
+const deleteSingleMedicine = catchAsync(async (req, res) => {
+  const result = await MedicineServices.deleteSingleMedicineFromDB(
+    req.params.medicineId,
+  );
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Single Medicine Deleted Successful',
+    data: result,
+  });
+});
 export const MedicineControllers = {
   createMedicine,
   getAllMedicines,
+  getSingleMedicine,
+  updateSingleMedicine,
+  deleteSingleMedicine,
 };

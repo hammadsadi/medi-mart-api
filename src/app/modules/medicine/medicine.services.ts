@@ -48,7 +48,33 @@ const getAllMedicineFromDB = async (query: Record<string, unknown>) => {
     data: medicines
   };
 };
+
+
+// Get Single Medicine
+const getSingleMedicineFromDB = async (id: string) => {
+  const medicine = await Medicine.findById(id);
+  return medicine;
+};
+
+// Update Single Medicine
+const updateSingleMedicineFromDB = async (payload: Partial<TMedicine>, id: string) => {
+
+  // Update Medicine
+  const medicine = await Medicine.findByIdAndUpdate(id, payload, {new:true});
+  return medicine;
+};
+
+// Delete Single Medicine
+const deleteSingleMedicineFromDB = async ( id: string) => {
+
+  // Delete Medicine
+  const medicine = await Medicine.findByIdAndDelete(id)
+  return medicine;
+};
 export const MedicineServices = {
   createMedicine,
   getAllMedicineFromDB,
+  getSingleMedicineFromDB,
+  updateSingleMedicineFromDB,
+  deleteSingleMedicineFromDB,
 };
