@@ -24,6 +24,7 @@ const userSchema = new Schema<TUser, UserModel>(
     },
     image: {
       type: String,
+      default: null,
     },
     role: {
       type: String,
@@ -36,9 +37,11 @@ const userSchema = new Schema<TUser, UserModel>(
     },
     address: {
       type: String,
+      default: null,
     },
     city: {
       type: String,
+      default: null,
     },
     status: {
       type: String,
