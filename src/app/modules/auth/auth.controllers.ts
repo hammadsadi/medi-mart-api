@@ -1,8 +1,7 @@
-import config from "../../config";
-import catchAsync from "../../utils/catchAsync";
-import sendResponse from "../../utils/sendResponse";
-import { AuthServices } from "./auth.services";
-
+import config from '../../config';
+import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
+import { AuthServices } from './auth.services';
 
 /**
  * @description Login Controllers
@@ -24,7 +23,6 @@ const userLogin = catchAsync(async (req, res) => {
     data: result,
   });
 });
-
 
 export const AuthControllers = {
   userLogin,

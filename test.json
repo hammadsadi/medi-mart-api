@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Paracetamol",
+    "description": "Paracetamol is a widely used over-the-counter medicine that helps relieve pain and reduce fever. It is commonly prescribed for conditions like headaches, muscle pain, colds, flu, and toothaches. This medication works by blocking pain signals in the brain and regulating body temperature. It is considered safe when taken at the recommended dosage, but excessive use can cause liver damage. Paracetamol is available in tablet, capsule, and syrup form, making it suitable for both adults and children. It is often used alone or in combination with other medications to treat symptoms of various illnesses. Consulting a doctor before prolonged use is advised.",
+    "price": 5.99,
+    "stock": 100,
+    "prescriptionRequired": false,
+    "manufacturer": "ABC Pharmaceuticals",
+    "expiryDate": "2026-12-31T00:00:00.000Z",
+    "category": "Pain Reliever",
+    "symptoms": ["Fever", "Headache", "Body Pain"],
+    "imageUrl": "https://example.com/images/paracetamol.jpg",
+    "createdAt": "2025-03-01T12:00:00.000Z",
+    "updatedAt": "2025-03-01T12:00:00.000Z"
+  },
+  {
+    "name": "Amoxicillin",
+    "description": "Amoxicillin is a penicillin-based antibiotic used to treat bacterial infections such as respiratory infections, ear infections, and urinary tract infections. It works by stopping the growth of bacteria and preventing them from multiplying. Amoxicillin is commonly prescribed for children and adults alike due to its effectiveness and safety when used correctly. This antibiotic is available in capsules, tablets, and liquid suspension. It is important to complete the full course of antibiotics as prescribed to prevent bacterial resistance. Side effects may include nausea, diarrhea, and allergic reactions. Always consult a doctor before using Amoxicillin.",
+    "price": 12.5,
+    "stock": 75,
+    "prescriptionRequired": true,
+    "manufacturer": "XYZ Pharmaceuticals",
+    "expiryDate": "2025-11-15T00:00:00.000Z",
+    "category": "Antibiotic",
+    "symptoms": ["Bacterial Infections", "Respiratory Infections"],
+    "imageUrl": "https://example.com/images/amoxicillin.jpg",
+    "createdAt": "2025-03-01T12:00:00.000Z",
+    "updatedAt": "2025-03-01T12:00:00.000Z"
+  },
+  {
+    "name": "Cetirizine",
+    "description": "Cetirizine is an antihistamine used to relieve allergy symptoms such as runny nose, sneezing, itchy eyes, and skin rashes. It works by blocking histamine, a substance in the body that causes allergic reactions. This medication is commonly used for seasonal allergies, hay fever, and chronic hives. Cetirizine is available in tablet, syrup, and chewable form, making it suitable for both adults and children. It is known for causing minimal drowsiness compared to older antihistamines. Common side effects include dry mouth, dizziness, and mild drowsiness. Always follow the prescribed dosage to avoid adverse effects.",
+    "price": 8.99,
+    "stock": 200,
+    "prescriptionRequired": false,
+    "manufacturer": "AllergyCare Ltd.",
+    "expiryDate": "2027-06-20T00:00:00.000Z",
+    "category": "Antihistamine",
+    "symptoms": ["Allergies", "Sneezing", "Itchy Eyes"],
+    "imageUrl": "https://example.com/images/cetirizine.jpg",
+    "createdAt": "2025-03-01T12:00:00.000Z",
+    "updatedAt": "2025-03-01T12:00:00.000Z"
+  },
+  {
+    "name": "Metformin",
+    "description": "Metformin is an oral diabetes medication that helps control blood sugar levels. It is primarily used to treat type 2 diabetes and is often prescribed alongside diet and exercise to improve insulin sensitivity. Metformin works by decreasing glucose production in the liver and increasing the body's response to insulin. It is available in immediate-release and extended-release tablets. Common side effects include nausea, stomach upset, and diarrhea. Long-term use of Metformin may lead to vitamin B12 deficiency, so regular check-ups are advised. It should not be used by individuals with severe kidney problems.",
+    "price": 15.75,
+    "stock": 90,
+    "prescriptionRequired": true,
+    "manufacturer": "DiabetesCare Pharma",
+    "expiryDate": "2026-09-10T00:00:00.000Z",
+    "category": "Diabetes Medication",
+    "symptoms": ["Type 2 Diabetes", "High Blood Sugar"],
+    "imageUrl": "https://example.com/images/metformin.jpg",
+    "createdAt": "2025-03-01T12:00:00.000Z",
+    "updatedAt": "2025-03-01T12:00:00.000Z"
+  }
+]

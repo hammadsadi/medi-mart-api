@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const userLoginSchema = z.object({
   body: z.object({
@@ -11,7 +11,6 @@ export const userLoginSchema = z.object({
   }),
 });
 
-
-export const AuthValidationSchemas={
-    userLoginSchema
-}
+export const AuthValidationSchemas = {
+  userLoginSchema,
+};

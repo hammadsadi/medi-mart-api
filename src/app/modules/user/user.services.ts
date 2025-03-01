@@ -1,29 +1,30 @@
-import config from "../../config";
-import AppError from "../../errors/AppError";
-import { createToken } from "../../utils/auth.utils";
-import { User } from "./user.model";
-import { TUser } from "./user.types";
+import config from '../../config';
+import AppError from '../../errors/AppError';
+import { createToken } from '../../utils/auth.utils';
+import { User } from './user.model';
+import { TUser } from './user.types';
 
 // User Save To Database
 const userSaveToDatabase = async (userInfo: TUser) => {
-
-    // Check User
-    const isExistUser = await User.findOne({email:userInfo.email})
-    if(isExistUser){
-        throw new AppError(400, 'User Already Exist!')
-    }
+  // Check User
+  const isExistUser = await User.findOne({ email: userInfo.email });
+  if (isExistUser) {
+    throw new AppError(400, 'User Already Exist!');
+  }
   const user = await User.create(userInfo);
 
-  const userPayload= { userEmail: user?.email, accountStatus:user?.status, role: user?.role }
+  const userPayload = {
+    userEmail: user?.email,
+    accountStatus: user?.status,
+    role: user?.role,
+  };
   const token = createToken(
     userPayload,
     config.JWT_ACCESS_TOKEN_SECRET as string,
     config.JWT_ACCESS_EXPIRES_IN as string,
   );
-  return {user, accessToken: token};
+  return { user, accessToken: token };
 };
-
-
 
 // User Save To Database
 // const usergetFromDatabase = async () => {
@@ -43,5 +44,4 @@ const userSaveToDatabase = async (userInfo: TUser) => {
 // };
 export const UserServices = {
   userSaveToDatabase,
- 
 };

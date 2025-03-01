@@ -1,8 +1,7 @@
-import config from "../../config";
-import catchAsync from "../../utils/catchAsync";
-import sendResponse from "../../utils/sendResponse";
-import { UserServices } from "./user.services";
-
+import config from '../../config';
+import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
+import { UserServices } from './user.services';
 
 /**
  * @description Create User Controllers
@@ -11,12 +10,12 @@ import { UserServices } from "./user.services";
  */
 const createUser = catchAsync(async (req, res) => {
   const result = await UserServices.userSaveToDatabase(req.body);
-   res.cookie('medi_mart_token', result?.accessToken, {
-     secure: config.NODE_ENV === 'production',
-     httpOnly: true,
-     sameSite: 'none',
-     maxAge: 1000 * 60 * 60 * 24 * 10,
-   });
+  res.cookie('medi_mart_token', result?.accessToken, {
+    secure: config.NODE_ENV === 'production',
+    httpOnly: true,
+    sameSite: 'none',
+    maxAge: 1000 * 60 * 60 * 24 * 10,
+  });
   sendResponse(res, {
     statusCode: 200,
     success: true,

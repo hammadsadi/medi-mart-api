@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import app from "./app";
-import config from "./app/config";
+import mongoose from 'mongoose';
+import app from './app';
+import config from './app/config';
 
 // Database and MongoDB Connection
 async function main() {
