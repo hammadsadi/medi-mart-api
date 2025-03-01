@@ -15,10 +15,15 @@ const userSaveToDatabase = async (userInfo: TUser) => {
   const user = await User.create(userInfo);
 
   const userPayload= { userEmail: user?.email, accountStatus:user?.status, role: user?.role }
-  const token =  createToken(userPayload, config.JWT_ACCESS_TOKEN_SECRET as string, config.JWT_ACCESS_EXPIRES_IN as string)
-  console.log(token)
+  const token = createToken(
+    userPayload,
+    config.JWT_ACCESS_TOKEN_SECRET as string,
+    config.JWT_ACCESS_EXPIRES_IN as string,
+  );
   return {user, accessToken: token};
 };
+
+
 
 // User Save To Database
 // const usergetFromDatabase = async () => {

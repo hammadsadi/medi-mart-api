@@ -71,9 +71,9 @@ userSchema.post('save', function (doc, next) {
 userSchema.statics.isExistUserByEmailOrNumber = async function (
   emailOrNumber: string,
 ) {
-  return await User.findOne({ 
-    $or:[{email: emailOrNumber}, {number: emailOrNumber}]
-   }).select('+password');
+  return await User.findOne({
+    $or: [{ email: emailOrNumber }, { phone: emailOrNumber }],
+  }).select('+password');
 };
 
 userSchema.statics.isPasswordMatched = async function (

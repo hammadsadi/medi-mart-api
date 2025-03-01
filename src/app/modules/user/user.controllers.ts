@@ -4,7 +4,11 @@ import sendResponse from "../../utils/sendResponse";
 import { UserServices } from "./user.services";
 
 
-// Create User Controllers
+/**
+ * @description Create User Controllers
+ * @param ''
+ * @returns Token and Data
+ */
 const createUser = catchAsync(async (req, res) => {
   const result = await UserServices.userSaveToDatabase(req.body);
    res.cookie('medi_mart_token', result?.accessToken, {
