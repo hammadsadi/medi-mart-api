@@ -56,3 +56,26 @@
     "updatedAt": "2025-03-01T12:00:00.000Z"
   }
 ]
+
+
+
+
+{
+  "user": "65f1234567890abcdef12345",
+  "medicines": [
+    {
+      "medicine": "65f9876543210fedcba98765",
+      "quantity": 2
+    },
+    {
+      "medicine": "65f876543210fedcba87654",
+      "quantity": 1
+    }
+  ],
+  "coupon": "65f567890abcdef123456789",
+  "deliveryOption": "Home-Delivery",
+  "deliveryArea": "Downtown",
+  "deliveryDetailsAddress": "123 Main Street, Apt 4B, Cityville",
+  "prescriptionUrl": "https://example.com/prescription.pdf",
+ 
+}

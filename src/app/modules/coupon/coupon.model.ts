@@ -10,11 +10,7 @@ const couponSchema = new Schema<TCoupon>(
       uppercase: true,
       trim: true,
     },
-    discountType: {
-      type: String,
-      enum: ['Flat', 'Percentage'],
-      required: true,
-    },
+
     discountValue: {
       type: Number,
       required: true,
@@ -27,8 +23,7 @@ const couponSchema = new Schema<TCoupon>(
     },
     maxDiscountAmount: {
       type: Number,
-      default: 0,
-      min: 0,
+      default: 500000,
     },
     startDate: {
       type: Date,

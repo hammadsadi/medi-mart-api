@@ -1,15 +1,16 @@
 import { Types } from "mongoose"
 
 export type TOrderMedicine = {
-    medicine: Types.ObjectId
-    quantity:number
-}
+  medicine: Types.ObjectId;
+  quantity: number;
+  prescriptionUrl: string;
+};
 
 export type TOrder = {
   user: Types.ObjectId;
   medicines: TOrderMedicine[];
   totalPrice: number;
-  coupon: Types.ObjectId | null;
+  coupon?: string;
   orderStatus: 'Pending' | 'Processing' | 'Shipped' | 'Delivered';
   paymentStatus: 'Pending' | 'Paid' | 'Failed';
   deliveryOption:
@@ -19,8 +20,15 @@ export type TOrder = {
     | 'Standard-Delivery';
   deliveryArea: string;
   deliveryDetailsAddress: string;
-  prescriptionUrl: string;
   discount: number;
   deliveryCharge: number;
-  finalAmount: number;
+  transaction: {
+    id: string;
+    transaction_status: string;
+    bank_status: string;
+    sp_code: string;
+    sp_message: string;
+    method: string;
+    date_time: string;
+  };
 };

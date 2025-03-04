@@ -12,49 +12,33 @@ const orderSchema = new Schema<TOrder>(
       {
         medicine: Schema.Types.ObjectId,
         quantity: Number,
+        prescriptionUrl: {
+          type: String,
+          default: null,
+        },
       },
     ],
     totalPrice: {
       type: Number,
       required: true,
     },
-    coupon: {
-      type: Schema.Types.ObjectId,
-      default: null,
-      ref: 'Coupon',
-    },
     orderStatus: {
       type: String,
       enum: ['Pending', 'Processing', 'Shipped', 'Delivered'],
       default: 'Pending',
     },
-    paymentStatus: {
-      type: String,
-      enum: ['Pending', 'Paid', 'Failed'],
-      default: 'Pending',
-    },
     deliveryOption: {
       type: String,
-      enum: [
-        'Home-Delivery',
-        'Store-Pickup',
-        'Express-Delivery',
-        'Standard-Delivery',
-      ],
+      enum: ['Home-Delivery', 'Store-Pickup', 'Express-Delivery'],
       required: true,
     },
     deliveryArea: {
       type: String,
-      required: true,
     },
     deliveryDetailsAddress: {
       type: String,
-      required: true,
     },
-    prescriptionUrl: {
-      type: String,
-      default: null,
-    },
+
     discount: {
       type: Number,
       default: 0,
@@ -63,9 +47,19 @@ const orderSchema = new Schema<TOrder>(
       type: Number,
       default: 0,
     },
-    finalAmount: {
-      type: Number,
-      default: 0,
+    transaction: {
+      id: String,
+      transaction_status: String,
+      bank_status: String,
+      sp_code: String,
+      sp_message: String,
+      method: String,
+      date_time: String,
+    },
+    paymentStatus: {
+      type: String,
+      enum: ['Pending', 'Paid', 'Cancelled'],
+      default: 'Pending',
     },
   },
   {
