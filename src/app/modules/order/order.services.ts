@@ -156,8 +156,93 @@ const orderSaveToDB = async (
   }
 };
 
+// Verify Payment
+const verifyPayment = async (orderId: string) => {
+  const verifiedPayment = await OrderUtils.verifyPaymentAsync(orderId);
+  // Update Order Status
+  if (verifiedPayment?.length) {
+    await Order.findOneAndUpdate(
+      {
+        'transaction.id': orderId,
+      },
+      {
+        'transaction.bank_status': verifiedPayment[0].bank_status,
+        'transaction.sp_code': verifiedPayment[0].sp_code,
+        'transaction.sp_message': verifiedPayment[0].sp_message,
+        'transaction.transaction_status': verifiedPayment[0].transaction_status,
+        'transaction.method': verifiedPayment[0].method,
+        'transaction.date_time': verifiedPayment[0].date_time,
+        paymentStatus:
+          verifiedPayment[0]?.bank_status == 'Success'
+            ? 'Paid'
+            : verifiedPayment[0]?.bank_status == 'Failed'
+              ? 'Pending'
+              : verifiedPayment[0]?.bank_status == 'Cancel'
+                ? 'Cancelled'
+                : '',
+      },
+    );
+  }
+  return verifiedPayment;
+};
 
+
+// Get Orders
+const loggedInUserOrder = async (email: string) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new AppError(400, 'User Not Found');
+  }
+  const orders = await Order.find({ user: user._id });
+
+  return orders;
+};
+
+
+// Get Orders for Admin
+const getOrdersForAdmin = async (email: string) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new AppError(400, 'User Not Found');
+  }
+  const orders = await Order.find().populate('user');
+
+  return orders;
+};
+
+
+// Update Order Status for Admin
+const updateOrdersForAdmin = async (id: string, payload:{status:string}) => {
+  const order = await Order.findById(id)
+  if (!order) {
+    throw new AppError(400, 'Order Not Found!');
+  }
+
+   if (!payload?.status) {
+     throw new AppError(400, 'Status is Required!');
+   }
+  // Update Order
+  const updatedOrder = await Order.findByIdAndUpdate(id, { orderStatus:payload?.status }, {new:true});
+  return updatedOrder;
+};
+
+
+// Delete Order For Admin
+const deleteOrdersForAdmin = async (id: string) => {
+  const order = await Order.findByIdAndDelete(id)
+  if (!order) {
+    throw new AppError(400, 'Order Not Found!');
+  }
+
+  
+  return order;
+};
 export const OrderServices = {
-    orderSaveToDB
-}
+  orderSaveToDB,
+  verifyPayment,
+  loggedInUserOrder,
+  getOrdersForAdmin,
+  updateOrdersForAdmin,
+  deleteOrdersForAdmin,
+};
 
