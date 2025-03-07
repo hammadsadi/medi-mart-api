@@ -27,6 +27,11 @@ const orderSchema = new Schema<TOrder>(
       enum: ['Pending', 'Processing', 'Shipped', 'Delivered'],
       default: 'Pending',
     },
+    isCheck: {
+      type: String,
+      enum: ['Accepted', 'In-Review', 'Deny'],
+      default: 'In-Review',
+    },
     deliveryOption: {
       type: String,
       enum: ['Home-Delivery', 'Store-Pickup', 'Express-Delivery'],

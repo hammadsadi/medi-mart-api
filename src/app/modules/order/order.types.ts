@@ -12,6 +12,7 @@ export type TOrder = {
   totalPrice: number;
   coupon?: string;
   orderStatus: 'Pending' | 'Processing' | 'Shipped' | 'Delivered';
+  isCheck: 'Accepted' | 'In-Review' | 'Deny';
   paymentStatus: 'Pending' | 'Paid' | 'Failed';
   deliveryOption:
     | 'Home-Delivery'

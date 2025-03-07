@@ -16,6 +16,14 @@ orderRouter.post(
   OrderControllers.createOrder,
 );
 
+// Get Discount Info
+orderRouter.post(
+  '/discount',
+  auth(UserRole.Customer, UserRole.Admin),
+  OrderControllers.descountInfo,
+);
+
+
 // Verify Payment
 orderRouter.get(
   '/verify',

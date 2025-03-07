@@ -24,6 +24,25 @@ const userLogin = catchAsync(async (req, res) => {
   });
 });
 
+
+/**
+ * @description Loggedin User Controllers
+ * @param ''
+ * @returns  Data
+ */
+const loggedInUser = catchAsync(async (req, res) => {
+  const result = await AuthServices.getLoginUserInfoFromDB(
+    req?.user?.userEmail,
+  );
+  
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'LoggedIn User Retrieved Successful',
+    data: result,
+  });
+});
 export const AuthControllers = {
   userLogin,
+  loggedInUser,
 };

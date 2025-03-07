@@ -17,6 +17,9 @@ const userSaveToDatabase = async (userInfo: TUser) => {
     userEmail: user?.email,
     accountStatus: user?.status,
     role: user?.role,
+    image: user?.image,
+    name: user?.name,
+    userId: user?._id,
   };
   const token = createToken(
     userPayload,

@@ -21,6 +21,22 @@ const createOrder = catchAsync(async (req, res) => {
   });
 });
 
+/**
+ * @description  Get Discount Info Controller
+ * @param ''
+ * @returns  Data
+ */
+const descountInfo = catchAsync(async (req, res) => {
+  const result = await OrderServices.getDiscountInfo(
+    req.body,
+  );
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Discount Info Retrieved Successful',
+    data: result,
+  });
+});
 
 /**
  * @description  Verify Order Controller
@@ -29,7 +45,9 @@ const createOrder = catchAsync(async (req, res) => {
  * @returns  Data
  */
 const verifyOrder = catchAsync(async (req, res) => {
-  const result = await OrderServices.verifyPayment(req.query.orderId as string);
+  const result = await OrderServices.verifyPayment(
+    req.query.order_id as string,
+  );
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -109,4 +127,5 @@ export const OrderControllers = {
   allOrderForAdmin,
   updateOrderForAdmin,
   deleteOrderForAdmin,
+  descountInfo,
 };

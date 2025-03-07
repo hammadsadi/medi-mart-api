@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import AppError from "../../errors/AppError";
-import { User } from "../user/user.model";
-import { TOrder } from "./order.types";
-import { Medicine } from "../medicine/medicine.model";
-import { Coupon } from "../coupon/coupon.model";
-import { Order } from "./order.model";
-import { OrderUtils } from "./order.utils";
+import AppError from '../../errors/AppError';
+import { User } from '../user/user.model';
+import { TOrder } from './order.types';
+import { Medicine } from '../medicine/medicine.model';
+import { Coupon } from '../coupon/coupon.model';
+import { Order } from './order.model';
+import { OrderUtils } from './order.utils';
 
 // Order Save To DB
 const orderSaveToDB = async (
@@ -36,7 +36,10 @@ const orderSaveToDB = async (
 
         //
         if (medicine?.prescriptionRequired === true && !item.prescriptionUrl) {
-          throw new AppError(400, `Prescription Required for ${medicine?.name}`);
+          throw new AppError(
+            400,
+            `Prescription Required for ${medicine?.name}`,
+          );
         }
         // Calculate Total Price
         if (medicine) {
@@ -100,18 +103,18 @@ const orderSaveToDB = async (
     }
 
     // Handle Delivery Options
-    if(payload?.deliveryOption === 'Store-Pickup'){
-      totalPrice -= deliveryCharge
-      deliveryCharge = 0
+    if (payload?.deliveryOption === 'Store-Pickup') {
+      totalPrice -= deliveryCharge;
+      deliveryCharge = 0;
     }
 
-     if (payload?.deliveryOption === "Express-Delivery") {
-       if(payload?.deliveryArea ==='Dhaka'){
+    if (payload?.deliveryOption === 'Express-Delivery') {
+      if (payload?.deliveryArea === 'Dhaka') {
         totalPrice += 100;
-       }else if (payload?.deliveryArea !== 'Dhaka') {
+      } else if (payload?.deliveryArea !== 'Dhaka') {
         totalPrice += 200;
-       }
-     }
+      }
+    }
 
     const orderInfo = {
       medicines: orderDetails,
@@ -119,8 +122,10 @@ const orderSaveToDB = async (
       totalPrice: Math.ceil(totalPrice),
       discount: Math.ceil(discount) || 0,
       deliveryCharge: deliveryCharge,
-      deliveryDetailsAddress: payload?.deliveryDetailsAddress ? payload?.deliveryDetailsAddress : '',
-      deliveryArea: payload?.deliveryArea ? payload?.deliveryArea: '',
+      deliveryDetailsAddress: payload?.deliveryDetailsAddress
+        ? payload?.deliveryDetailsAddress
+        : '',
+      deliveryArea: payload?.deliveryArea ? payload?.deliveryArea : '',
       deliveryOption: payload?.deliveryOption,
     };
 
@@ -133,27 +138,64 @@ const orderSaveToDB = async (
       order_id: createOrder?._id,
       currency: 'BDT',
       customer_name: user?.name,
-      customer_address: payload?.deliveryDetailsAddress ? payload?.deliveryDetailsAddress : '',
+      customer_address: payload?.deliveryDetailsAddress
+        ? payload?.deliveryDetailsAddress
+        : '',
       customer_email: user?.email,
       customer_phone: user?.phone,
       customer_city: payload?.deliveryArea ? payload?.deliveryArea : '',
       client_ip,
     };
 
-     const payment = await OrderUtils.makePaymentAsync(orderPayload);
-     if (payment?.transactionStatus) {
-       await createOrder?.updateOne({
-         transaction: {
-           id: payment.sp_order_id,
-           transaction_status: payment.transactionStatus,
-         },
-       });
-     }
-     
-     return payment?.checkout_url;
+    const payment = await OrderUtils.makePaymentAsync(orderPayload);
+    if (payment?.transactionStatus) {
+      await createOrder?.updateOne({
+        transaction: {
+          id: payment.sp_order_id,
+          transaction_status: payment.transactionStatus,
+        },
+      });
+    }
+
+    return payment?.checkout_url;
   } catch (error: any) {
     throw new Error(error);
   }
+};
+
+// Get DisCount info
+const getDiscountInfo = async (payload: {
+  coupon: string;
+  totalPrice: number;
+}) => {
+  // Find Coupon
+  const coupon = await Coupon.findOne({ code: payload?.coupon });
+  if (!coupon) {
+    throw new AppError(400, 'Invalid Coupon Code');
+  }
+  const mxDiscount = coupon?.maxDiscountAmount || 500000;
+  if (payload?.totalPrice > mxDiscount) {
+    throw new AppError(400, `Discount cannot exceed ${mxDiscount}`);
+  }
+  // Check Order Price
+  if (payload?.totalPrice < coupon?.minOrderAmount) {
+    throw new AppError(
+      400,
+      `Your order must be at least ${coupon?.minOrderAmount}`,
+    );
+  }
+  //  Calculate Discount
+  const discountPercentage = coupon?.discountValue || 0;
+  const discountPrice = (payload?.totalPrice * discountPercentage) / 100;
+  // const totalDiscount = Math.min(discountPrice, mxDiscount);
+  const discount = Math.min(discountPrice, mxDiscount);
+  const finalPrice = payload?.totalPrice - discount;
+
+  return {
+    code: coupon?.code,
+    discount: Math.ceil(discount),
+    finalPrice: Math.ceil(finalPrice),
+  };
 };
 
 // Verify Payment
@@ -186,18 +228,19 @@ const verifyPayment = async (orderId: string) => {
   return verifiedPayment;
 };
 
-
 // Get Orders
 const loggedInUserOrder = async (email: string) => {
   const user = await User.findOne({ email });
   if (!user) {
     throw new AppError(400, 'User Not Found');
   }
-  const orders = await Order.find({ user: user._id });
+  const orders = await Order.find({ user: user._id }).populate({
+    path: 'medicines.medicine',
+    model: 'Medicine',
+  });
 
   return orders;
 };
-
 
 // Get Orders for Admin
 const getOrdersForAdmin = async (email: string) => {
@@ -210,31 +253,35 @@ const getOrdersForAdmin = async (email: string) => {
   return orders;
 };
 
-
 // Update Order Status for Admin
-const updateOrdersForAdmin = async (id: string, payload:{status:string}) => {
-  const order = await Order.findById(id)
+const updateOrdersForAdmin = async (
+  id: string,
+  payload: { status: string },
+) => {
+  const order = await Order.findById(id);
   if (!order) {
     throw new AppError(400, 'Order Not Found!');
   }
 
-   if (!payload?.status) {
-     throw new AppError(400, 'Status is Required!');
-   }
+  if (!payload?.status) {
+    throw new AppError(400, 'Status is Required!');
+  }
   // Update Order
-  const updatedOrder = await Order.findByIdAndUpdate(id, { orderStatus:payload?.status }, {new:true});
+  const updatedOrder = await Order.findByIdAndUpdate(
+    id,
+    { orderStatus: payload?.status },
+    { new: true },
+  );
   return updatedOrder;
 };
 
-
 // Delete Order For Admin
 const deleteOrdersForAdmin = async (id: string) => {
-  const order = await Order.findByIdAndDelete(id)
+  const order = await Order.findByIdAndDelete(id);
   if (!order) {
     throw new AppError(400, 'Order Not Found!');
   }
 
-  
   return order;
 };
 export const OrderServices = {
@@ -244,5 +291,5 @@ export const OrderServices = {
   getOrdersForAdmin,
   updateOrdersForAdmin,
   deleteOrdersForAdmin,
+  getDiscountInfo,
 };
-

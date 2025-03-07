@@ -24,6 +24,9 @@ const userLogin = async (payload: TAuth) => {
     userEmail: isExistUser?.email,
     accountStatus: isExistUser?.status,
     role: isExistUser?.role,
+    image: isExistUser?.image,
+    name: isExistUser?.name,
+    userId: isExistUser?._id,
   };
 
   // Create Token
@@ -36,6 +39,12 @@ const userLogin = async (payload: TAuth) => {
   return { accessToken: token };
 };
 
+// Get Login User Info From DB
+const getLoginUserInfoFromDB = async (email: string) => {
+  const user = await User.findOne({ email: email });
+  return user;
+};
 export const AuthServices = {
   userLogin,
+  getLoginUserInfoFromDB,
 };
