@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Medicine } from './medicine.model';
 import { TMedicine } from './medicine.types';
 
@@ -13,42 +14,54 @@ const getAllMedicineFromDB = async (query: Record<string, unknown>) => {
   if (query?.searchTerm) {
     searchTerm = query?.searchTerm as string;
   }
-  const searchData = {
-    $or: [
-      { name: { $regex: searchTerm, $options: 'i' } },
-      { category: { $regex: searchTerm, $options: 'i' } },
-      { symptoms: { $in: [new RegExp(searchTerm, 'i')] } },
-    ],
-  };
+  const searchData = [
+    { name: { $regex: searchTerm, $options: 'i' } },
+    { category: { $regex: searchTerm, $options: 'i' } },
+    { symptoms: { $in: [new RegExp(searchTerm, 'i')] } },
+  ];
 
-  let page = 1;
-  let limit = 10;
-  let skip = 0;
-  if (query?.limit) {
-    limit = Number(query?.limit);
+  // Filtering Functionality
+  const filter: any = {};
+  if (query.category) {
+    filter.category = query.category;
+  }
+  if (query?.minPrice || query.maxPrice) {
+    filter.price = {};
+    // Min Price
+    if (query.minPrice) {
+      filter.price.$gte = Number(query?.minPrice);
+    }
+    // Max Price
+    if (query.maxPrice) {
+      filter.price.$lte = Number(query?.maxPrice);
+    }
   }
 
-  if (query?.page) {
-    page = Number(query?.page);
-    skip = (page - 1) * limit;
+  if (query.prescriptionRequired) {
+    filter.prescriptionRequired = query.prescriptionRequired === 'true';
   }
+
+  // const finalQuery = { $or: searchData, ...filter };
+  const finalQuery = { $and: [{ $or: searchData }, filter] };
+  const page = Number(query?.page) || 1;
+  const limit = Number(query?.limit) || 6;
+  const skip = (page - 1) * limit;
 
   const [medicines, total] = await Promise.all([
-    Medicine.find(searchData).skip(skip).limit(limit),
-    Medicine.countDocuments(searchData)
-  ])
+    Medicine.find(finalQuery).skip(skip).limit(limit),
+    Medicine.countDocuments(finalQuery),
+  ]);
 
   return {
-    meta:{
+    meta: {
       total,
       page,
       limit,
-      totalPages: Math.ceil(total/limit)
+      totalPages: Math.ceil(total / limit),
     },
-    data: medicines
+    data: medicines,
   };
 };
-
 
 // Get Single Medicine
 const getSingleMedicineFromDB = async (id: string) => {
@@ -56,19 +69,26 @@ const getSingleMedicineFromDB = async (id: string) => {
   return medicine;
 };
 
-// Update Single Medicine
-const updateSingleMedicineFromDB = async (payload: Partial<TMedicine>, id: string) => {
+// Get Category
+const getCategoryFromDB = async () => {
+  const medicine = await Medicine.distinct('category');
+  return medicine;
+};
 
+// Update Single Medicine
+const updateSingleMedicineFromDB = async (
+  payload: Partial<TMedicine>,
+  id: string,
+) => {
   // Update Medicine
-  const medicine = await Medicine.findByIdAndUpdate(id, payload, {new:true});
+  const medicine = await Medicine.findByIdAndUpdate(id, payload, { new: true });
   return medicine;
 };
 
 // Delete Single Medicine
-const deleteSingleMedicineFromDB = async ( id: string) => {
-
+const deleteSingleMedicineFromDB = async (id: string) => {
   // Delete Medicine
-  const medicine = await Medicine.findByIdAndDelete(id)
+  const medicine = await Medicine.findByIdAndDelete(id);
   return medicine;
 };
 export const MedicineServices = {
@@ -77,4 +97,5 @@ export const MedicineServices = {
   getSingleMedicineFromDB,
   updateSingleMedicineFromDB,
   deleteSingleMedicineFromDB,
+  getCategoryFromDB,
 };

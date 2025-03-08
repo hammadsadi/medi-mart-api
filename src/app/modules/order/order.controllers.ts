@@ -89,13 +89,34 @@ const allOrderForAdmin = catchAsync(async (req, res) => {
 });
 
 /**
+ * @description  Get Single Order Controller for Admin
+ * @param 'orderId'
+ * @Query ""
+ * @returns  Data
+ */
+const getSingleOrderForAdmin = catchAsync(async (req, res) => {
+  const result = await OrderServices.getSingleOrdersForAdmin(req.params?.orderId);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Single Order Retrieved Successful',
+    data: result,
+  });
+});
+
+
+/**
  * @description  Update Order Controller for Admin
  * @param 'orderId'
  * @Query ""
  * @returns  Data
  */
 const updateOrderForAdmin = catchAsync(async (req, res) => {
-  const result = await OrderServices.updateOrdersForAdmin(req.params?.orderId, req.body);
+
+  const result = await OrderServices.updateOrdersForAdmin(
+    req.params?.orderId,
+    req.body,
+  );
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -104,7 +125,21 @@ const updateOrderForAdmin = catchAsync(async (req, res) => {
   });
 });
 
-
+/**
+ * @description  Update Order Controller for Admin
+ * @param 'orderId'
+ * @Query ""
+ * @returns  Data
+ */
+const updateOrderCheckingStatusForAdmin = catchAsync(async (req, res) => {
+  const result = await OrderServices.orderCheckingStatusUpdateForAdmin(req.params?.orderId, req.body);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Order Updated Successful',
+    data: result,
+  });
+});
 /**
  * @description  Delete Order Controller for Admin
  * @param 'orderId'
@@ -128,4 +163,6 @@ export const OrderControllers = {
   updateOrderForAdmin,
   deleteOrderForAdmin,
   descountInfo,
+  getSingleOrderForAdmin,
+  updateOrderCheckingStatusForAdmin,
 };

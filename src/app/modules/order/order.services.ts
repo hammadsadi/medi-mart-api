@@ -6,6 +6,8 @@ import { Medicine } from '../medicine/medicine.model';
 import { Coupon } from '../coupon/coupon.model';
 import { Order } from './order.model';
 import { OrderUtils } from './order.utils';
+import { sendEmail } from '../../utils/sendMail';
+import { TUser } from '../user/user.types';
 
 // Order Save To DB
 const orderSaveToDB = async (
@@ -248,13 +250,123 @@ const getOrdersForAdmin = async (email: string) => {
   if (!user) {
     throw new AppError(400, 'User Not Found');
   }
-  const orders = await Order.find().populate('user');
+  const orders = await Order.find().populate('user').populate({
+    path: 'medicines.medicine',
+    model: 'Medicine',
+  });
 
   return orders;
 };
 
+// Get Single Orders for Admin
+const getSingleOrdersForAdmin = async (id: string) => {
+  const order = await Order.findById(id).populate('user').populate({
+    path: 'medicines.medicine',
+    model: 'Medicine',
+  });
+  if (!order) {
+    throw new AppError(400, 'Order Not Found');
+  }
+
+  return order;
+};
+
 // Update Order Status for Admin
 const updateOrdersForAdmin = async (
+  id: string,
+  payload: { status: string },
+) => {
+  const order = await Order.findById(id).populate<{ user: TUser }>('user');
+  if (!order) {
+    throw new AppError(400, 'Order Not Found!');
+  }
+
+  if (!payload?.status) {
+    throw new AppError(400, 'Status is Required!');
+  }
+  // Update Order
+  const updatedOrder = await Order.findByIdAndUpdate(
+    id,
+    { orderStatus: payload?.status },
+    { new: true },
+  );
+  // Send Email
+  const to = order?.user?.email;
+  const sub = 'Order Status Update ✅';
+  const eText = `New Update Please Read This Email`;
+  const eHtml = `<!DOCTYPE html>
+  <html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Medicine Delivery Update</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        text-align: center;
+        padding: 10px 0;
+      }
+      .content {
+        text-align: left;
+        padding: 20px;
+        font-size: 16px;
+        color: #333333;
+      }
+      .status {
+        font-weight: bold;
+        color: #007BFF;
+      }
+      .footer {
+        text-align: center;
+        font-size: 14px;
+        color: #777;
+        margin-top: 20px;
+      }
+      @media (max-width: 600px) {
+        .container {
+          width: 100%;
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h2>Medicine Delivery Update</h2>
+      </div>
+      <div class="content">
+        <p>Dear <strong>${order?.user?.name}</strong>,</p>
+        <p>Your order <strong>#${order?._id}</strong> status has been updated to:</p>
+        <p class="status">${updatedOrder?.orderStatus}</p>
+        <p>Thank you for choosing our service. If you have any questions, feel free to contact us.</p>
+      </div>
+      <div class="footer">
+        <p>&copy; 2025 Medi Mart. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+  </html>`;
+
+  sendEmail(to, sub, eText, eHtml);
+  return updatedOrder;
+};
+
+// Update Order Checking Status for Admin
+const orderCheckingStatusUpdateForAdmin = async (
   id: string,
   payload: { status: string },
 ) => {
@@ -269,7 +381,7 @@ const updateOrdersForAdmin = async (
   // Update Order
   const updatedOrder = await Order.findByIdAndUpdate(
     id,
-    { orderStatus: payload?.status },
+    { isCheck: payload?.status },
     { new: true },
   );
   return updatedOrder;
@@ -292,4 +404,6 @@ export const OrderServices = {
   updateOrdersForAdmin,
   deleteOrdersForAdmin,
   getDiscountInfo,
+  getSingleOrdersForAdmin,
+  orderCheckingStatusUpdateForAdmin,
 };

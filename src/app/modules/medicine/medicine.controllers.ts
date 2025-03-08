@@ -50,6 +50,21 @@ const getSingleMedicine = catchAsync(async (req, res) => {
   });
 });
 
+/**
+ * @description Get Category Medicine
+ * @param ''
+ * @Response   Data
+ */
+const getCategoryMedicine = catchAsync(async (req, res) => {
+  const result = await MedicineServices.getCategoryFromDB()
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Category Retrieved Successful',
+    data: result,
+  });
+});
+
 
 /**
  * @description Update Single Medicine
@@ -91,4 +106,5 @@ export const MedicineControllers = {
   getSingleMedicine,
   updateSingleMedicine,
   deleteSingleMedicine,
+  getCategoryMedicine,
 };

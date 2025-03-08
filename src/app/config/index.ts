@@ -17,4 +17,5 @@ export default {
   SP_PREFIX: process.env.SP_PREFIX,
   SP_RETURN_URL: process.env.SP_RETURN_URL,
   DB_FILE: process.env.DB_FILE,
+  SM_PASS: process.env.SM_PASS,
 };

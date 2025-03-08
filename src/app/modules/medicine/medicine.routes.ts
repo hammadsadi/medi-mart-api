@@ -19,6 +19,9 @@ medicineRouter.post(
 // Get All Medicine
 medicineRouter.get('/',  MedicineControllers.getAllMedicines);
 
+// Get All Category
+medicineRouter.get('/category',  MedicineControllers.getCategoryMedicine);
+
 // Get Single Medicine
 medicineRouter.get('/:medicineId', MedicineControllers.getSingleMedicine);
 

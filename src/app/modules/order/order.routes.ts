@@ -45,11 +45,26 @@ orderRouter.get(
   OrderControllers.allOrderForAdmin,
 );
 
+
+// get Single Orders For Admin
+orderRouter.get(
+  '/single-order/:orderId',
+  auth(UserRole.Customer, UserRole.Admin),
+  OrderControllers.getSingleOrderForAdmin,
+);
+
 // Update Order For Admin
 orderRouter.patch(
   '/update-order/:orderId',
   auth(UserRole.Admin),
   OrderControllers.updateOrderForAdmin,
+);
+
+// Update Order checking Status For Admin
+orderRouter.patch(
+  '/update-order-checking/:orderId',
+  auth(UserRole.Admin),
+  OrderControllers.updateOrderCheckingStatusForAdmin,
 );
 
 // Update Order For Admin
