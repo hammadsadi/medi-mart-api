@@ -370,7 +370,7 @@ const orderCheckingStatusUpdateForAdmin = async (
   id: string,
   payload: { status: string },
 ) => {
-  const order = await Order.findById(id);
+  const order = await Order.findById(id).populate<{ user: TUser }>('user');
   if (!order) {
     throw new AppError(400, 'Order Not Found!');
   }
@@ -384,6 +384,80 @@ const orderCheckingStatusUpdateForAdmin = async (
     { isCheck: payload?.status },
     { new: true },
   );
+
+  // Send Email
+  const to = order?.user?.email;
+  const sub = 'Your Order Has Been Checked ✅';
+  const eText = `New Update Please Read This Email`;
+  const eHtml = `<!DOCTYPE html>
+  <html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Medicine Delivery Update</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        text-align: center;
+        padding: 10px 0;
+      }
+      .content {
+        text-align: left;
+        padding: 20px;
+        font-size: 16px;
+        color: #333333;
+      }
+      .status {
+        font-weight: bold;
+        color: #007BFF;
+      }
+      .footer {
+        text-align: center;
+        font-size: 14px;
+        color: #777;
+        margin-top: 20px;
+      }
+      @media (max-width: 600px) {
+        .container {
+          width: 100%;
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h2>Order Checking Status Updated</h2>
+      </div>
+      <div class="content">
+        <p>Dear <strong>${order?.user?.name}</strong>,</p>
+        <p>We have checked your order <strong>#${order?._id}</strong> and its status has been updated to:</p>
+        <p class="status">${updatedOrder?.isCheck}</p>
+        <p>If you have any questions or concerns, please feel free to reach out.</p>
+        <p>Thank you for choosing our service!</p>
+      </div>
+      <div class="footer">
+        <p>&copy; 2025 Medi Mart. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+  </html>`;
+
+  sendEmail(to, sub, eText, eHtml);
   return updatedOrder;
 };
 
