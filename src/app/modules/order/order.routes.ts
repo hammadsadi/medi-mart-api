@@ -75,7 +75,27 @@ orderRouter.delete(
 );
 
 
+// Get Specific User Order For Admin
+orderRouter.get(
+  '/specific-user-orders/:userId',
+  auth(UserRole.Admin),
+  OrderControllers.specificUserOrdersForAdmin,
+);
 
+
+// Get Success Payments Order For Admin
+orderRouter.get(
+  '/success-orders',
+  auth(UserRole.Admin),
+  OrderControllers.getSuccessPaymentsOrderForAdmin,
+);
+
+// Get Earning and Order Count For Admin
+orderRouter.get(
+  '/earning-order',
+  auth(UserRole.Admin),
+  OrderControllers.getTotalEarningsAndOrderCountForAdmin,
+);
 
 
 // Export User Router

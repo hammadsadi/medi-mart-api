@@ -155,6 +155,56 @@ const deleteOrderForAdmin = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+
+/**
+ * @description  Get Specific User Order Controller for Admin
+ * @param 'userId'
+ * @Query ""
+ * @returns  Data
+ */
+const specificUserOrdersForAdmin = catchAsync(async (req, res) => {
+  const result = await OrderServices.getSpecificUserOrdersForAdmin(req.params?.userId);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Order Retrieved Successful',
+    data: result,
+  });
+});
+
+/**
+ * @description  Get Success Payment Order Controller for Admin
+ * @param ''
+ * @Query ""
+ * @returns  Data
+ */
+const getSuccessPaymentsOrderForAdmin = catchAsync(async (req, res) => {
+  const result = await OrderServices.getSuccessPaymentsForAdmin()
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Order Retrieved Successful',
+    data: result,
+  });
+});
+
+/**
+ * @description  Get Total Earnings and Order Count Controller for Admin
+ * @param ''
+ * @Query ""
+ * @returns  Data
+ */
+const getTotalEarningsAndOrderCountForAdmin = catchAsync(async (req, res) => {
+  const result = await OrderServices.getTotalOrdersAndEarningsForAdmin()
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Order Info Retrieved Successful',
+    data: result,
+  });
+});
+
 export const OrderControllers = {
   createOrder,
   verifyOrder,
@@ -165,4 +215,7 @@ export const OrderControllers = {
   descountInfo,
   getSingleOrderForAdmin,
   updateOrderCheckingStatusForAdmin,
+  specificUserOrdersForAdmin,
+  getSuccessPaymentsOrderForAdmin,
+  getTotalEarningsAndOrderCountForAdmin,
 };

@@ -470,6 +470,60 @@ const deleteOrdersForAdmin = async (id: string) => {
 
   return order;
 };
+
+// Get Specific User Order For Admin
+const getSpecificUserOrdersForAdmin = async (id: string) => {
+  const order = await Order.find({ user: id }).populate({
+    path: 'medicines.medicine',
+    model: 'Medicine',
+  });
+  if (!order) {
+    throw new AppError(400, 'Order Not Found!');
+  }
+
+  return order;
+};
+
+//Get Success Payments for Admin
+const getSuccessPaymentsForAdmin = async () => {
+  const order = await Order.find({ paymentStatus: 'Paid' }).populate<{
+    user: TUser;
+  }>('user');
+  if (!order) {
+    throw new AppError(400, 'Order Not Found!');
+  }
+
+  return order;
+};
+
+
+//Get Total Order and Earnings for Admin
+const getTotalOrdersAndEarningsForAdmin = async () => {
+  const totalEarnings = await Order.aggregate([
+    { $match: { paymentStatus: 'Paid' } },
+    { $group: { _id: null, total: { $sum: '$totalPrice' } } },
+  ]);
+ 
+  const totalOrder = await Order.countDocuments()
+  const totalPendingPrescription = await Order.countDocuments({
+    isCheck: 'In-Review',
+  });
+  const totalMedicine = await Medicine.countDocuments();
+  const stockLavel = await Medicine.countDocuments({stock:{$gt:0}});
+  const totalUsers = await User.countDocuments();
+
+  return {
+    totalEarnings: totalEarnings[0].total,
+    totalOrders: totalOrder,
+    totalMedicine,
+    totalUsers,
+    stockLavel,
+    totalPendingPrescription,
+  };
+};
+
+
+
 export const OrderServices = {
   orderSaveToDB,
   verifyPayment,
@@ -480,4 +534,7 @@ export const OrderServices = {
   getDiscountInfo,
   getSingleOrdersForAdmin,
   orderCheckingStatusUpdateForAdmin,
+  getSpecificUserOrdersForAdmin,
+  getSuccessPaymentsForAdmin,
+  getTotalOrdersAndEarningsForAdmin,
 };
