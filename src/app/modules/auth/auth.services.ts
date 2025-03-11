@@ -9,14 +9,14 @@ const userLogin = async (payload: TAuth) => {
   // Check User
   const isExistUser = await User.isExistUserByEmailOrNumber(payload.identifier);
   if (!isExistUser) {
-    throw new AppError(400, 'Invalid Credentials E');
+    throw new AppError(400, 'Invalid Credentials');
   }
 
   // Match Password
   if (
     !(await User.isPasswordMatched(payload.password, isExistUser?.password))
   ) {
-    throw new AppError(400, 'Invalid Credentials P');
+    throw new AppError(400, 'Invalid Credentials');
   }
 
   // Create Payload

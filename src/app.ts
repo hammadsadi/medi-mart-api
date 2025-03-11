@@ -13,7 +13,7 @@ app.use(cookieParser());
 // Cors Config
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://bicycle-haven.vercel.app'],
+    origin: ['https://medi-mart-ochre.vercel.app', 'http://localhost:3000'],
     credentials: true,
   }),
 );

@@ -76,16 +76,20 @@ const reviewSaveToDB = async (payload: TMedicineReview) => {
 
 
 // Get Sngle Product Reviews From DB
-const getSingleMedicineReviewsFromDB = async(id:string)=>{
-    const reviews = await Review.find({ medicineId:id });
-    return reviews
-}
+const getSingleMedicineReviewsFromDB = async (id: string) => {
+  const reviews = await Review.find({ medicineId: id })
+    .populate('userId')
+    .sort({ createdAt: -1 });
+  return reviews;
+};
 
 // Get All Reviews From DB
-const getAllReviewsFromDB = async()=>{
-    const reviews = await Review.find()
-    return reviews
-}
+const getAllReviewsFromDB = async () => {
+  const reviews = await Review.find()
+    .populate('userId')
+    .sort({ createdAt: -1 });
+  return reviews;
+};
 export const MedicineReviews = {
   reviewSaveToDB,
   getAllReviewsFromDB,

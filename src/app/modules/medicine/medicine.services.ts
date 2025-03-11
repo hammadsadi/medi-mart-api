@@ -41,14 +41,14 @@ const getAllMedicineFromDB = async (query: Record<string, unknown>) => {
     filter.prescriptionRequired = query.prescriptionRequired === 'true';
   }
 
-  // const finalQuery = { $or: searchData, ...filter };
-  const finalQuery = { $and: [{ $or: searchData }, filter] };
+  // const finalQuery = { $and: [{ $or: searchData }, filter] };
+  const finalQuery = searchTerm ? { $or: searchData, ...filter } : filter;
   const page = Number(query?.page) || 1;
   const limit = Number(query?.limit) || 6;
   const skip = (page - 1) * limit;
 
   const [medicines, total] = await Promise.all([
-    Medicine.find(finalQuery).skip(skip).limit(limit),
+    Medicine.find(finalQuery).sort({ createdAt: -1 }).skip(skip).limit(limit),
     Medicine.countDocuments(finalQuery),
   ]);
 
