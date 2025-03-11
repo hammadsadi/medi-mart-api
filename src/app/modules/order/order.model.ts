@@ -48,6 +48,10 @@ const orderSchema = new Schema<TOrder>(
       type: Number,
       default: 0,
     },
+    ratings: {
+      type: Number,
+      default: 0,
+    },
     deliveryCharge: {
       type: Number,
       default: 0,

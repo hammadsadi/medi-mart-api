@@ -22,6 +22,7 @@ export type TOrder = {
   deliveryArea: string;
   deliveryDetailsAddress: string;
   discount: number;
+  ratings: number;
   deliveryCharge: number;
   transaction: {
     id: string;
