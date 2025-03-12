@@ -11,9 +11,9 @@ Users can choose from three delivery options, each with different charges:
 
 Medi Mart provides a seamless, secure, and user-friendly experience for all your healthcare needs!
 
-## [ Live API URL](https://hammad-sadi-portfolio.vercel.app)
+## [ Live API URL](https://medi-mart-api.vercel.app/api/v1)
 
-Click here for the Medi Mart API Site: [https://hammad-sadi-portfolio.vercel.app/](https://hammad-sadi-portfolio.vercel.app/)
+Click here for the Medi Mart API Site: [https://medi-mart-api.vercel.app/api/v1](https://medi-mart-api.vercel.app/api/v1)
 
 
 ## 🚀 Project Features - Medi Mart
