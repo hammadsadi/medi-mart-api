@@ -41,7 +41,7 @@ const getAllMedicineFromDB = async (query: Record<string, unknown>) => {
     filter.prescriptionRequired = query.prescriptionRequired === 'true';
   }
 
-  // const finalQuery = { $and: [{ $or: searchData }, filter] };
+ 
   const finalQuery = searchTerm ? { $or: searchData, ...filter } : filter;
   const page = Number(query?.page) || 1;
   const limit = Number(query?.limit) || 6;
